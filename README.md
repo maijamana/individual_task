@@ -12,6 +12,31 @@ This project uses Python libraries such as:
 - `cryptography` for RSA key generation, signing, and verification.
 - `PIL` (Pillow) for image manipulation.
 - `numpy` for efficient image data manipulation.
+  
+**The project uses a two-step approach**:
+1. Digital Signature Creation and Embedding:
+    - The image is first cleaned by zeroing out its least significant bits (LSBs) to avoid embedding noise.
+    - A SHA-256 hash of this cleaned image is computed.
+    - The hash is signed using a 4096-bit RSA private key (PKCS#8 format).
+    - The signature (512 bytes) is then embedded bit-by-bit into the LSBs of the original image using steganography.
+    - The result is a visually identical image that now contains an invisible, verifiable digital signature.
+
+2. Signature Verification:
+    - The image is loaded and the embedded signature is extracted from its LSBs.
+    - The image is cleaned again to match the state used during signing.
+    - A SHA-256 hash is computed over the cleaned image.
+    - Using the corresponding RSA public key, the extracted signature is verified against the computed hash.
+    - The result confirms whether the image was signed with the private key and hasn't been altered since.
+
+## Potential Use Cases
+Potential applications include:
+
+- **Digital watermarking**: To protect image ownership and verify authenticity.
+- **Tamper detection**: Ensure that images haven't been altered since being signed.
+- **Secure image transmission**: Embedding a verifiable signature allows secure sharing of visual content, especially in journalism, legal, and research fields.
+- **Steganographic security**: Embedding signatures in image LSBs makes them harder to detect and tamper with, increasing robustness against casual inspection.
+
+
 
 ## Features
 
